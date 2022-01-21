@@ -1,12 +1,21 @@
 import React, { useState } from 'react';
-import Task from './Task';
 
 const Form = (props) => {
     const [tasklist, setTasklist] = useState([]);
     const [task, setTask] = useState({tasktext: "", checked: false});
 
-    const changeHandler = (e) => {
-        setTask({tasktext: e.target.value, checked: false});
+    const changeHandler = (iTarget) => {
+        const checkedTasks = tasklist.map((task, i) => {
+            if(iTarget == i){
+                // task.checked = !task.checked;
+                const updatedTask = { ...task, checked: !task.checked };
+                return updatedTask;
+            }
+
+            return task;
+        })
+
+        setTasklist(checkedTasks);
     }
 
     const deleteTaskHandler = (iTarget) => {
@@ -36,7 +45,7 @@ const Form = (props) => {
                 {
                     tasklist.map((task, i) => {
                         return (
-                            <p key={i} style={task.checked ? { textDecoration: "line-through" } : {}}>{task.tasktext} | {task.checked ? "is checked" : "is not checked"}
+                            <p key={i} style={task.checked ? { textDecoration: "line-through" } : {}}>{task.tasktext} | <input type="checkbox" onChange={(e) => {changeHandler(i);}} checked={task.checked} />
                                 <button onClick={(e) => {deleteTaskHandler(i);}}> Delete </button>
                             </p>
                         );
